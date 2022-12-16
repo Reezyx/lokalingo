@@ -2,14 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ValidRecaptcha;
-use App\Utilities\StatusUtilities;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
-use Lang;
 
-class RegisterRequest extends FormRequest
+class CreateLanguageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,11 +26,8 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         $data = [
-            "email" => "required|email",
-            "username" => "required|string|max:10",
-            "password" => "required|string|max:12",
-            "full_name" => "required|string|max:100",
-            "asal"  => "required|string"
+            "name" => "required|string",
+            "description" => "required|string",
         ];
         return $data;
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
@@ -24,4 +25,15 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/profile', [ProfileController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::group(['middleware' => 'check.admin', 'prefix' => 'admin'], function () {
+        Route::get('profile', [AdminController::class, 'profile']);
+        Route::group(['prefix' => 'lang'], function () {
+            Route::post('create', [AdminController::class, 'createLanguage']);
+            Route::post('question/{level_id}', [AdminController::class, 'createQuestion']);
+            Route::get('question/{level_id}', [AdminController::class, 'getQuestion']);
+            Route::delete('question/{level_id}', [AdminController::class, 'deleteLevel']);
+            Route::delete('question/item/{question_id}', [AdminController::class, 'deleteQuestionItem']);
+        });
+    });
 });
