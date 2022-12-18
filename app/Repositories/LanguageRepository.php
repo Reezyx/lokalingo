@@ -64,14 +64,19 @@ class LanguageRepository implements RepositoryInterface
     return false;
   }
 
-  public function deleteLevel($level_id)
+  public function updateQuestion($request, $question_id)
   {
-    $question = Question::where('level_id', $level_id);
-    $check = $question->delete();
-    if ($check) {
-      return true;
-    }
-    return false;
+    $question = Question::find($question_id);
+    $question->question = $request->question;
+    $question->option_1 = $request->option_1;
+    $question->option_2 = $request->option_2;
+    $question->option_3 = $request->option_3;
+    $question->option_4 = $request->option_4;
+    $question->option_5 = $request->option_5;
+    $question->answer = $request->answer;
+    $question->save();
+
+    return $question;
   }
 
   public function deleteQuestionItem($question_id)

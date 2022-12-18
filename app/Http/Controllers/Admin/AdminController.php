@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateLanguageRequest;
 use App\Models\Language;
 use App\Models\LanguageLevel;
+use App\Models\Question;
 use App\Repositories\LanguageRepository;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,42 @@ class AdminController extends Controller
         ], 200);
     }
 
+    public function getLanguage()
+    {
+        $language = Language::all();
+
+        if (empty($language)) {
+            return response()->json([
+                'code' => 500,
+                'info' => 'Get All Language Failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Get All Language Success',
+            'data' => $language
+        ], 200);
+    }
+
+    public function getLevel($language_id)
+    {
+        $level = LanguageLevel::where('language_id', $language_id)->get();
+
+        if (empty($level)) {
+            return response()->json([
+                'code' => 500,
+                'info' => 'Get All Language Failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Get All Language Success',
+            'data' => $level
+        ], 200);
+    }
+
     public function createQuestion(Request $request, $level_id)
     {
         $langRepo = new LanguageRepository();
@@ -86,21 +123,40 @@ class AdminController extends Controller
         ], 200);
     }
 
-    public function deleteLevel($level_id)
+    public function getQuestionItem($question_id)
     {
-        $langRepo = new LanguageRepository();
-        $question = $langRepo->deleteLevel($level_id);
+        $question = Question::find($question_id);
 
-        if (!$question) {
+        if (empty($question)) {
             return response()->json([
                 'code' => 500,
-                'info' => 'Delete Question Failed',
+                'info' => 'Get Question Item Failed',
             ], 500);
         }
 
         return response()->json([
             'code' => 200,
-            'info' => 'Delete Question Success',
+            'info' => 'Get Question Item Success',
+            'data' => $question
+        ], 200);
+    }
+
+    public function updateQuestionItem(Request $request, $question_id)
+    {
+        $langRepo = new LanguageRepository();
+        $question = $langRepo->updateQuestion($request, $question_id);
+
+        if (empty($question)) {
+            return response()->json([
+                'code' => 500,
+                'info' => 'Update Question Item Failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Update Question Item Success',
+            'data' => $question
         ], 200);
     }
 

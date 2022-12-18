@@ -30,9 +30,12 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         Route::get('profile', [AdminController::class, 'profile']);
         Route::group(['prefix' => 'lang'], function () {
             Route::post('create', [AdminController::class, 'createLanguage']);
+            Route::get('all', [AdminController::class, 'getLanguage']);
+            Route::get('level/{language_id}', [AdminController::class, 'getLevel']);
             Route::post('question/{level_id}', [AdminController::class, 'createQuestion']);
             Route::get('question/{level_id}', [AdminController::class, 'getQuestion']);
-            Route::delete('question/{level_id}', [AdminController::class, 'deleteLevel']);
+            Route::get('question/item/{question_id}', [AdminController::class, 'getQuestionItem']);
+            Route::put('question/item/{question_id}', [AdminController::class, 'updateQuestionItem']);
             Route::delete('question/item/{question_id}', [AdminController::class, 'deleteQuestionItem']);
         });
     });
