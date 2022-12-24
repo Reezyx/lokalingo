@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginGoogleRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -67,6 +68,47 @@ class AuthController extends Controller
             ], 400);
         }
         $user = auth('api')->user();
+        $data['user'] = $user;
+        $cred = [
+            'type' => 'bearer',
+            'token' => $token,
+            'lifetime' => auth('api')->factory()->getTTL() * 60,
+        ];
+        $data['token'] = $cred;
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Login successful',
+            'data' => $data
+        ], 200);
+    }
+
+    public function googleLogin(LoginGoogleRequest $request)
+    {
+        $checkUser = User::where('email', $request->email)->first();
+        if ($checkUser) {
+            $credentials = [
+                "email" => $checkUser->email,
+                "password" => $checkUser->google_id
+            ];
+            $user = $checkUser;
+            $token = auth('api')->attempt($credentials);
+        } else {
+            $user = User::create([
+                "email"     => $request->email,
+                "full_name" => $request->name,
+                "google_id" => $request->google_id,
+                "password"  => Hash::make($request->google_id),
+            ]);
+
+            $credentials = [
+                "email" => $request->email,
+                "password" => $request->google_id
+            ];
+
+            $token = auth('api')->attempt($credentials);
+        }
+
         $data['user'] = $user;
         $cred = [
             'type' => 'bearer',

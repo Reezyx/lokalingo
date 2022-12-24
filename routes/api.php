@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/google/login', [AuthController::class, 'googleLogin']);
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/profile', [ProfileController::class, 'index']);
@@ -37,6 +39,14 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::get('question/item/{question_id}', [AdminController::class, 'getQuestionItem']);
             Route::put('question/item/{question_id}', [AdminController::class, 'updateQuestionItem']);
             Route::delete('question/item/{question_id}', [AdminController::class, 'deleteQuestionItem']);
+            Route::group(['prefix' => 'question/example'], function () {
+                Route::post('{level_id}', [AdminController::class, 'createQuestionExample']);
+                Route::get('{level_id}', [AdminController::class, 'getQuestionExample']);
+            });
         });
     });
+
+    Route::get('lang', [LanguageController::class, 'index']);
+    Route::get('lang/question/{level_id}', [LanguageController::class, 'getQuestion']);
+    Route::get('lang/question/example/{level_id}', [LanguageController::class, 'exampleQuestion']);
 });

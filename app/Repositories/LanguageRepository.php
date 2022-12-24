@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Language;
 use App\Models\LanguageLevel;
 use App\Models\Question;
+use App\Models\QuestionExample;
 use App\Repositories\RepositoryInterface;
 
 class LanguageRepository implements RepositoryInterface
@@ -55,9 +56,41 @@ class LanguageRepository implements RepositoryInterface
     return false;
   }
 
+  public function createQuestionExample($request, $level_id)
+  {
+    $data = [];
+    $level = LanguageLevel::find($level_id);
+    foreach ($request->item as $item) {
+      $questions = QuestionExample::create([
+        'level_id' => $level->id,
+        'question' => $item['question'],
+        'option_1' => $item['option_1'],
+        'option_2' => $item['option_2'],
+        'option_3' => $item['option_3'],
+        'option_4' => $item['option_4'],
+        'option_5' => $item['option_5'],
+        'answer' => $item['answer'],
+      ]);
+      array_push($data, $questions);
+    }
+    if ($data) {
+      return $data;
+    }
+    return false;
+  }
+
   public function getQuestion($level_id)
   {
     $question = Question::where('level_id', $level_id)->inRandomOrder()->get();
+    if ($question) {
+      return $question;
+    }
+    return false;
+  }
+
+  public function getQuestionExample($level_id)
+  {
+    $question = QuestionExample::where('level_id', $level_id)->inRandomOrder()->get();
     if ($question) {
       return $question;
     }

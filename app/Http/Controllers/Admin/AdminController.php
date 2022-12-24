@@ -177,4 +177,42 @@ class AdminController extends Controller
             'info' => 'Delete Question Item Success',
         ], 200);
     }
+
+    public function createQuestionExample(Request $request, $level_id)
+    {
+        $langRepo = new LanguageRepository();
+        $question = $langRepo->createQuestionExample($request, $level_id);
+
+        if (!$question) {
+            return response()->json([
+                'code' => 500,
+                'info' => 'Create Question Example Failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Create Question Example Success',
+            'data' => $question
+        ], 200);
+    }
+
+    public function getQuestionExample($level_id)
+    {
+        $langRepo = new LanguageRepository();
+        $question = $langRepo->getQuestionExample($level_id);
+
+        if (!$question) {
+            return response()->json([
+                'code' => 500,
+                'info' => 'Get Question Example Failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'info' => 'Get Question Example Success',
+            'data' => $question
+        ], 200);
+    }
 }
