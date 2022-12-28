@@ -8,7 +8,9 @@ use App\Models\Language;
 use App\Models\LanguageLevel;
 use App\Models\Question;
 use App\Repositories\LanguageRepository;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -207,6 +209,11 @@ class AdminController extends Controller
                 'code' => 500,
                 'info' => 'Get Question Example Failed',
             ], 500);
+        } else if (empty($question)) {
+            return response()->json([
+                'code' => 404,
+                'info' => 'Question Example Empty',
+            ], 404);
         }
 
         return response()->json([

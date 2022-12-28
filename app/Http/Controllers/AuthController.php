@@ -19,6 +19,7 @@ class AuthController extends Controller
     {
         DB::beginTransaction();
         try {
+            $data = [];
             $registeredUser = User::where('email', $request->email)->first();
             if (!empty($registeredUser)) {
                 return response()->json([
@@ -36,10 +37,23 @@ class AuthController extends Controller
             ]);
             DB::commit();
 
+            $credentials = [
+                'email' => $request->email,
+                'password' => $request->password,
+            ];
+            $token = auth('api')->attempt($credentials);
+            $data['user'] = $user;
+            $cred = [
+                'type' => 'bearer',
+                'token' => $token,
+                'lifetime' => auth('api')->factory()->getTTL() * 60,
+            ];
+            $data['token'] = $cred;
+
             return response()->json([
                 'code' => 200,
                 'info' => "Registered Successfully",
-                'data' => $user
+                'data' => $data
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

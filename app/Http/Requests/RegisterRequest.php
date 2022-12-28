@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use App\Rules\ValidRecaptcha;
 use App\Utilities\StatusUtilities;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,13 +29,16 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
-        $data = [
-            "email" => "required|email",
-            "username" => "required|string|max:10",
-            "password" => "required|string|max:12",
-            "full_name" => "required|string|max:100",
-            "asal"  => "required|string"
-        ];
+        $users = User::all();
+        foreach ($users as $user) {
+            $data = [
+                "email"     => "required|email",
+                "username"  => "required|string|max:20|unique:users,username",
+                "password"  => "required|string|max:12",
+                "full_name" => "required|string|max:100",
+                "asal"      => "required|string"
+            ];
+        }
         return $data;
     }
 

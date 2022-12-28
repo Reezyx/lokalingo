@@ -40,8 +40,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
             Route::put('question/item/{question_id}', [AdminController::class, 'updateQuestionItem']);
             Route::delete('question/item/{question_id}', [AdminController::class, 'deleteQuestionItem']);
             Route::group(['prefix' => 'question/example'], function () {
-                Route::post('{level_id}', [AdminController::class, 'createQuestionExample']);
-                Route::get('{level_id}', [AdminController::class, 'getQuestionExample']);
+                Route::post('/{level_id}', [AdminController::class, 'createQuestionExample']);
+                Route::get('/{level_id}', [AdminController::class, 'getQuestionExample']);
             });
         });
     });
@@ -49,4 +49,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('lang', [LanguageController::class, 'index']);
     Route::get('lang/question/{level_id}', [LanguageController::class, 'getQuestion']);
     Route::get('lang/question/example/{level_id}', [LanguageController::class, 'exampleQuestion']);
+    Route::post('lang/answer/{level_id}', [LanguageController::class, 'answerQuestion']);
+    Route::get('leaderboard', [LanguageController::class, 'leaderboard']);
 });

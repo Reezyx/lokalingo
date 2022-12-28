@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LanguageLevel extends Model
+class UserScore extends Model
 {
-    protected $table = 'language_levels';
+    protected $table = 'user_scores';
     protected $fillable = [
-        'id',
-        'language_id',
-        'level',
+        'user_id',
+        'level_id',
+        'score',
     ];
 }

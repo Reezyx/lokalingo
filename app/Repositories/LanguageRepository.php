@@ -6,6 +6,7 @@ use App\Models\Language;
 use App\Models\LanguageLevel;
 use App\Models\Question;
 use App\Models\QuestionExample;
+use App\Models\User;
 use App\Repositories\RepositoryInterface;
 
 class LanguageRepository implements RepositoryInterface
@@ -120,5 +121,41 @@ class LanguageRepository implements RepositoryInterface
       return true;
     }
     return false;
+  }
+
+  public function checkAnswer($request, $level_id)
+  {
+    $data = [];
+    $score = 0;
+    foreach ($request->answers as $answer) {
+      $question = Question::where('level_id', $level_id)->find($answer['id']);
+      $score = $answer['answer'] == $question->answer ? $score + 10 : $score + 0;
+    }
+    $data['score'] = $score;
+    if ($data) {
+      return $data;
+    }
+    return false;
+  }
+
+  public function getLeaderboard($user_id)
+  {
+    $leaderboards = User::orderBy('exp', 'desc')->limit(10)->get();
+    $total = $leaderboards->count();
+    $arrleader = $leaderboards->toArray();
+    for ($i = 1; $i <= $total; $i++) {
+      $leaderboard[$i] = $arrleader[$i - 1]['full_name'];
+    }
+
+    $temp = [];
+    $users = User::orderBy('exp', 'desc')->get();
+    foreach ($users as $user) {
+      array_push($temp, $user->id);
+    }
+    $position = array_keys($temp, $user_id);
+
+    $response['leaderboard'] = $leaderboard;
+    $response['user_position'] = $position[0] + 1;
+    return $response;
   }
 }
