@@ -22,7 +22,7 @@ class LanguageController extends Controller
         $ip = $request->ip();
         $totalRequest = $rateLimiter->hit(
             $ip,
-            10
+            30 * 60
         );
         if ($totalRequest <= 1) {
             $userId = auth('api')->user()->id;
