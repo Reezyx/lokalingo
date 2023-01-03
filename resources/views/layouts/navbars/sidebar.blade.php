@@ -7,7 +7,7 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('dashboard.index') }}">
-            <img src="{{ asset('argon') }}/img/brand/lko.png" class="navbar-brand-img" alt="...">
+            <img src="{{ asset('argon/img/brand/lko.png') }}" class="navbar-brand-img" alt="...">
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -16,7 +16,7 @@
                     aria-expanded="false">
                     <div class="media align-items-center">
                         <span class="avatar avatar-sm rounded-circle">
-                            <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-1-800x800.jpg">
+                            <img alt="Image placeholder" src="{{ asset('argon/img/theme/team-1-800x800.jpg') }}">
                         </span>
                     </div>
                 </a>
@@ -57,7 +57,7 @@
                 <div class="row">
                     <div class="col-6 collapse-brand">
                         <a href="{{ route('dashboard.index') }}">
-                            <img src="{{ asset('argon') }}/img/brand/blue.png">
+                            <img src="{{ asset('argon/img/brand/blue.png') }}">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">

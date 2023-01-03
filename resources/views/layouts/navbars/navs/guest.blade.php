@@ -1,7 +1,7 @@
 <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
     <div class="container px-4">
         <a class="navbar-brand" href="{{ route('dashboard.index') }}">
-            <img src="{{ asset('argon') }}/img/brand/lko.png" />
+            <img src="{{ asset('argon/img/brand/lko.png') }}" />
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-6 collapse-brand">
                         <a href="{{ route('dashboard.index') }}">
-                            <img src="{{ asset('argon') }}/img/brand/lko.png">
+                            <img src="{{ asset('argon/img/brand/lko.png') }}">
                         </a>
                     </div>
                     <div class="col-6 collapse-close">
