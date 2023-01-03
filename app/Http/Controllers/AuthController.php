@@ -6,6 +6,8 @@ use App\Http\Requests\LoginGoogleRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Utilities\StatusUtilities;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +16,8 @@ use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 class AuthController extends Controller
 {
+
+    use AuthenticatesUsers;
 
     public function register(RegisterRequest $request)
     {
@@ -137,6 +141,7 @@ class AuthController extends Controller
             'data' => $data
         ], 200);
     }
+
 
     public function logout()
     {

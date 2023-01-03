@@ -5,17 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Language;
 use App\Models\Question;
 use App\Models\QuestionExample;
+use App\Models\Traffic;
 use App\Models\User;
 use App\Models\UserScore;
 use App\Repositories\LanguageRepository;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class LanguageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $lang = Language::with('level')->get();
+        $rateLimiter = app(RateLimiter::class);
+        $ip = $request->ip();
+        $totalRequest = $rateLimiter->hit(
+            $ip,
+            10
+        );
+        if ($totalRequest <= 1) {
+            $userId = auth('api')->user()->id;
+            $traffic = new Traffic();
+            $traffic->user_id = $userId;
+            $traffic->ip_address = $ip;
+            $traffic->save();
+        }
         return response()->json([
             'code' => 200,
             'info' => 'Get all language succesfull',
