@@ -31,7 +31,8 @@ class AdminController extends Controller
             $device->area = $area->regionName;
             $device->save();
         }
-        $users = Device::all();
+        $users = Device::orderBy('created_at', 'desc')->limit(7)->get();
+        // dd($data);
         return view('dashboard')->with('data', $data)->with('users', $users);
     }
 

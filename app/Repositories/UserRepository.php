@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\QuestionExample;
 use App\Models\Traffic;
 use App\Models\User;
+use App\Models\UserScore;
 use App\Repositories\RepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -52,7 +53,11 @@ class UserRepository implements RepositoryInterface
     $lastWeekEnd = date("Y-m-d", strtotime("next saturday", strtotime("last sunday midnight", strtotime("-1 week +1 day"))));
     $lastUser = User::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
 
-    $percentage = (float) (($user - $lastUser) / $lastUser) * 100;
+    if ($lastUser == 0) {
+      $percentage = (float) (($user) / 1) * 100;
+    } else {
+      $percentage = (float) (($user - $lastUser) / $lastUser) * 100;
+    }
 
     $monthStart = Carbon::now()->startOfMonth();
     $monthEnd = Carbon::now()->endOfMonth();
@@ -66,6 +71,27 @@ class UserRepository implements RepositoryInterface
       $percentTraffic = (float) (($traffic - $lastTraffic) / $lastTraffic) * 100;
     }
 
+    $newUsers = User::select(DB::raw("(COUNT(*)) as count"), DB::raw("(DATE_FORMAT(created_at, '%M-%Y')) as month"))->orderBy('created_at', 'asc')->groupBy('month')->limit(6)->get()->toArray();
+
+    $count = [];
+    $month = [];
+    foreach ($newUsers as $newUser) {
+      array_push($count, $newUser['count']);
+      array_push($month, Carbon::parse($newUser['month'])->format('M Y'));
+    }
+
+    $userCount = implode(",", $count);
+    $userMonth = implode(", ", $month);
+
+    $activity = UserScore::where('created_at', Carbon::now())->count();
+    $lastActivity = UserScore::where('created_at', Carbon::yesterday())->count();
+
+    if ($lastActivity == 0) {
+      $percentActivity = (float) (($activity) / 1) * 100;
+    } else {
+      $percentActivity = (float) (($activity - $lastActivity) / $lastActivity) * 100;
+    }
+
     $response = [
       "user_current" => $user,
       "user_past" => $lastUser,
@@ -73,6 +99,10 @@ class UserRepository implements RepositoryInterface
       "traffic_current" => $traffic,
       "traffic_past" => $lastTraffic,
       "percent_traffic" => $percentTraffic,
+      "user_count" => $userCount,
+      "user_month" => $userMonth,
+      "user_activity" => $activity,
+      "activity_percent" => $percentActivity
     ];
 
     return $response;

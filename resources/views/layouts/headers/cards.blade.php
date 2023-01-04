@@ -18,7 +18,7 @@
                                 </div>
                             </div>
                             <p class="mt-3 mb-0 text-muted text-sm">
-                                @if ($data['percent_traffic'] <= 0)
+                                @if ($data['percent_traffic'] < 0)
                                     <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i>
                                         {{ $data['percent_traffic'] }}%</span>
                                 @else
@@ -39,13 +39,13 @@
                                     <span class="h2 font-weight-bold mb-0">{{ $data['user_current'] }}</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                                        <i class="fas fa-chart-pie"></i>
+                                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                        <i class="fas fa-users"></i>
                                     </div>
                                 </div>
                             </div>
                             <p class="mt-3 mb-0 text-muted text-sm">
-                                @if ($data['percentage'] <= 0)
+                                @if ($data['percentage'] < 0)
                                     <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i>
                                         {{ $data['percentage'] }}%</span>
                                 @else
@@ -62,17 +62,24 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
-                                    <span class="h2 font-weight-bold mb-0">924</span>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Activity</h5>
+                                    <span class="h2 font-weight-bold mb-0">{{ $data['user_activity'] }}</span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                        <i class="fas fa-users"></i>
+                                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <i class="fas fa-chart-pie"></i>
                                     </div>
                                 </div>
                             </div>
                             <p class="mt-3 mb-0 text-muted text-sm">
-                                <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
+                                @if ($data['activity_percent'] < 0)
+                                    <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i>
+                                        {{ $data['activity_percent'] }}%</span>
+                                @else
+                                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i>
+                                        {{ $data['activity_percent'] }}%</span>
+                                @endif
+                                </span>
                                 <span class="text-nowrap">Since yesterday</span>
                             </p>
                         </div>

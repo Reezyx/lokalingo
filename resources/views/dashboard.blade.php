@@ -17,7 +17,8 @@
                             <div class="col">
                                 <ul class="nav nav-pills justify-content-end">
                                     <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"
-                                        data-value="[0, 20, 10, 30, 15, 40, 20, 60, 65, 35, 12, 34]" id="data-chart">
+                                        data-count="[{{ $data['user_count'] }}]" data-value="{{ $data['user_month'] }}"
+                                        id="data-chart">
                                         <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
                                             <span class="d-none d-md-block">Month</span>
                                             <span class="d-md-none">M</span>
@@ -411,7 +412,8 @@
 
 @push('js')
     <script src="{{ asset('argon/vendor/chart.js/dist/Chart.min.js') }}"></script>
-    <script src="{{ asset('argon/vendor/chart.js/dist/Chart.extension.js') }}/vendor/chart.js/dist/Chart.extension.js"></script>
+    <script src="{{ asset('argon/vendor/chart.js/dist/Chart.extension.js') }}/vendor/chart.js/dist/Chart.extension.js">
+    </script>
     <script>
         var table;
         var isUpdate = false;

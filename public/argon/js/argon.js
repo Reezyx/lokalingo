@@ -1002,7 +1002,6 @@ var SalesChart = (function() {
 	// Methods
 
 	function init($chart) {
-
 		var salesChart = new Chart($chart, {
 			type: 'line',
 			options: {
@@ -1013,11 +1012,10 @@ var SalesChart = (function() {
 							zeroLineColor: Charts.colors.gray[900]
 						},
 						ticks: {
-							callback: function(value) {
-								if (!(value % 10)) {
-									return value;
-								}
-							}
+							beginAtZero: true,
+							steps: 10,
+							stepValue: 5,
+							max: 50
 						}
 					}]
 				},
@@ -1039,10 +1037,10 @@ var SalesChart = (function() {
 				}
 			},
 			data: {
-				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				labels: $("#data-chart").data('value').split(','),
 				datasets: [{
 					label: 'Performance',
-					data: $("#data-chart").data('value'),
+					data: $("#data-chart").data('count'),
 				}]
 			}
 		});
