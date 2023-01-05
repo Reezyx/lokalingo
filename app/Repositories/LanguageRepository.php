@@ -141,13 +141,14 @@ class LanguageRepository implements RepositoryInterface
   public function getLeaderboard($user_id)
   {
     $leaderboards = User::orderBy('exp', 'desc')->limit(10)->get();
+    $leaderboard = [];
     $total = $leaderboards->count();
     $arrleader = $leaderboards->toArray();
     for ($i = 1; $i <= $total; $i++) {
+      $user['id'] = $i;
       $user['name'] = $arrleader[$i - 1]['full_name'];
       $user['exp'] = $arrleader[$i - 1]['exp'];
-      $leaderboard[$i] = $user;
-      $exp[$i] = $arrleader[$i - 1]['exp'];
+      array_push($leaderboard, $user);
     }
 
     $temp = [];
