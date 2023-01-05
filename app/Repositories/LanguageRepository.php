@@ -144,7 +144,10 @@ class LanguageRepository implements RepositoryInterface
     $total = $leaderboards->count();
     $arrleader = $leaderboards->toArray();
     for ($i = 1; $i <= $total; $i++) {
-      $leaderboard[$i] = $arrleader[$i - 1]['full_name'];
+      $user['name'] = $arrleader[$i - 1]['full_name'];
+      $user['exp'] = $arrleader[$i - 1]['exp'];
+      $leaderboard[$i] = $user;
+      $exp[$i] = $arrleader[$i - 1]['exp'];
     }
 
     $temp = [];

@@ -10,7 +10,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 use Lang;
 
-class RegisterRequest extends FormRequest
+
+class UpdateProfilRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,8 +36,8 @@ class RegisterRequest extends FormRequest
                 "email"     => "required|email|unique:users,email",
                 "username"  => "required|string|max:20|unique:users,username",
                 "password"  => "required|string|max:12",
+                "password_confirmation" => "required|string|same:password",
                 "full_name" => "required|string|max:100",
-                "asal"      => "required|string"
             ];
         }
         return $data;

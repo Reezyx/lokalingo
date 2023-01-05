@@ -26,6 +26,7 @@ Route::post('/google/login', [AuthController::class, 'googleLogin']);
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/profile', [ProfileController::class, 'index']);
+    Route::put('/update-profile', [ProfileController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::group(['middleware' => 'check.admin', 'prefix' => 'admin'], function () {
