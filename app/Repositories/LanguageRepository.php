@@ -138,6 +138,21 @@ class LanguageRepository implements RepositoryInterface
     return false;
   }
 
+  public function checkAnswerExample($request, $level_id)
+  {
+    $data = [];
+    $score = 0;
+    foreach ($request->answers as $answer) {
+      $question = Question::where('level_id', $level_id)->find($answer['id']);
+      $score = $answer['answer'] == $question->answer ? $score + 10 : $score + 0;
+    }
+    $data['score'] = $score;
+    if ($data) {
+      return $data;
+    }
+    return false;
+  }
+
   public function getLeaderboard($user_id)
   {
     $leaderboards = User::orderBy('exp', 'desc')->limit(10)->get();

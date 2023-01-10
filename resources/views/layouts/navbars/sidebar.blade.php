@@ -91,13 +91,20 @@
                         Dashboard
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dashboard.language') }}"
+                        style="color: #F77F00; {{ request()->is('admin/language') ? 'font-weight: bolder;' : '' }}">
+                        <i class="fa-solid fa-language" style="color: #F77F00;"></i>
+                        Manajemen Bahasa
+                    </a>
+                </li>
                 {{-- <li class="nav-item">
                     <a class="nav-link" href="{{ route('user.all') }}"
                         style="color: #F77F00; {{ request()->is('admin/user') ? 'font-weight: bolder;' : '' }}">
                         <i class="fa fa-user" style="color: #F77F00;"></i> Manajemen User
                     </a>
                 </li> --}}
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" href="#navbar-examples" data-toggle="collapse" role="button"
                         aria-expanded="{{ request()->is('admin/question') || request()->is('admin/language') ? 'true' : 'false' }}"
                         aria-controls="navbar-examples">
@@ -122,7 +129,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </div>

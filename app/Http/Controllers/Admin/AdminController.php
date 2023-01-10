@@ -27,28 +27,37 @@ class AdminController extends Controller
 
     public function createLanguage(CreateLanguageRequest $request)
     {
-        $check = Language::where('name', $request->name)->first();
-        if (!empty($check)) {
-            return response()->json([
-                'code' => 500,
-                'info' => 'Language already exists',
-            ], 500);
-        }
-        $langRepo = new LanguageRepository();
-        $lang = $langRepo->createLanguage($request);
+        try {
+            $check = Language::where('name', $request->name)->first();
+            if (!empty($check)) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Language already exists',
+                ], 500);
+            }
+            $langRepo = new LanguageRepository();
+            $lang = $langRepo->createLanguage($request);
 
-        if (!$lang) {
+            if (!$lang) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Create Language Failed',
+                ], 500);
+            }
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Create Language Success',
+                'data' => $lang
+            ], 200);
+        } catch (\Exception $e) {
+            Log::debug($e);
             return response()->json([
                 'code' => 500,
                 'info' => 'Create Language Failed',
-            ], 500);
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'code' => 200,
-            'info' => 'Create Language Success',
-            'data' => $lang
-        ], 200);
     }
 
     public function getLanguage()
@@ -89,21 +98,30 @@ class AdminController extends Controller
 
     public function createQuestion(Request $request, $level_id)
     {
-        $langRepo = new LanguageRepository();
-        $question = $langRepo->createQuestion($request, $level_id);
+        try {
+            $langRepo = new LanguageRepository();
+            $question = $langRepo->createQuestion($request, $level_id);
 
-        if (!$question) {
+            if (!$question) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Create Question Failed',
+                ], 500);
+            }
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Create Question Success',
+                'data' => $question
+            ], 200);
+        } catch (\Exception $e) {
+            Log::debug($e);
             return response()->json([
                 'code' => 500,
                 'info' => 'Create Question Failed',
-            ], 500);
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'code' => 200,
-            'info' => 'Create Question Success',
-            'data' => $question
-        ], 200);
     }
 
     public function getQuestion($level_id)
@@ -145,58 +163,85 @@ class AdminController extends Controller
 
     public function updateQuestionItem(Request $request, $question_id)
     {
-        $langRepo = new LanguageRepository();
-        $question = $langRepo->updateQuestion($request, $question_id);
+        try {
+            $langRepo = new LanguageRepository();
+            $question = $langRepo->updateQuestion($request, $question_id);
 
-        if (empty($question)) {
+            if (empty($question)) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Update Question Item Failed',
+                ], 500);
+            }
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Update Question Item Success',
+                'data' => $question
+            ], 200);
+        } catch (\Exception $e) {
+            Log::debug($e);
             return response()->json([
                 'code' => 500,
-                'info' => 'Update Question Item Failed',
-            ], 500);
+                'info' => 'Update Question Failed',
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'code' => 200,
-            'info' => 'Update Question Item Success',
-            'data' => $question
-        ], 200);
     }
 
     public function deleteQuestionItem($question_id)
     {
-        $langRepo = new LanguageRepository();
-        $question = $langRepo->deleteQuestionItem($question_id);
+        try {
+            $langRepo = new LanguageRepository();
+            $question = $langRepo->deleteQuestionItem($question_id);
 
-        if (!$question) {
+            if (!$question) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Delete Question Item Failed',
+                ], 500);
+            }
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Delete Question Item Success',
+            ], 200);
+        } catch (\Exception $e) {
+            Log::debug($e);
             return response()->json([
                 'code' => 500,
-                'info' => 'Delete Question Item Failed',
-            ], 500);
+                'info' => 'Delete Question Failed',
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'code' => 200,
-            'info' => 'Delete Question Item Success',
-        ], 200);
     }
 
     public function createQuestionExample(Request $request, $level_id)
     {
-        $langRepo = new LanguageRepository();
-        $question = $langRepo->createQuestionExample($request, $level_id);
+        try {
+            $langRepo = new LanguageRepository();
+            $question = $langRepo->createQuestionExample($request, $level_id);
 
-        if (!$question) {
+            if (!$question) {
+                return response()->json([
+                    'code' => 500,
+                    'info' => 'Create Question Example Failed',
+                ], 500);
+            }
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Create Question Example Success',
+                'data' => $question
+            ], 200);
+        } catch (\Exception $e) {
+            Log::debug($e);
             return response()->json([
                 'code' => 500,
                 'info' => 'Create Question Example Failed',
-            ], 500);
+                'error' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'code' => 200,
-            'info' => 'Create Question Example Success',
-            'data' => $question
-        ], 200);
     }
 
     public function getQuestionExample($level_id)

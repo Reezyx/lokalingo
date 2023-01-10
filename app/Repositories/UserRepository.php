@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\QuestionExample;
 use App\Models\Traffic;
 use App\Models\User;
+use App\Models\UserCriteria;
 use App\Models\UserScore;
 use App\Repositories\RepositoryInterface;
 use Carbon\Carbon;
@@ -45,13 +46,11 @@ class UserRepository implements RepositoryInterface
 
   public function getDataDashboard()
   {
-    $weekStart = Carbon::now()->startOfWeek();
-    $weekEnd = Carbon::now()->endOfWeek();
-    $user = User::whereBetween('created_at', [$weekStart, $weekEnd])->count();
+    $user = User::whereMonth('created_at', Carbon::now()->month)->count();
 
-    $lastWeekStart = date("Y-m-d", strtotime("last sunday midnight", strtotime("-1 week +1 day")));
-    $lastWeekEnd = date("Y-m-d", strtotime("next saturday", strtotime("last sunday midnight", strtotime("-1 week +1 day"))));
-    $lastUser = User::whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])->count();
+    // $lastWeekStart = date("Y-m-d", strtotime("last sunday midnight", strtotime("-1 week +1 day")));
+    // $lastWeekEnd = date("Y-m-d", strtotime("next saturday", strtotime("last sunday midnight", strtotime("-1 week +1 day"))));
+    $lastUser = User::whereMonth('created_at', Carbon::now()->subMonth()->month())->count();
 
     if ($lastUser == 0) {
       $percentage = (float) (($user) / 1) * 100;
@@ -83,14 +82,28 @@ class UserRepository implements RepositoryInterface
     $userCount = implode(",", $count);
     $userMonth = implode(", ", $month);
 
-    $activity = UserScore::where('created_at', Carbon::now())->count();
-    $lastActivity = UserScore::where('created_at', Carbon::yesterday())->count();
+    $activity = UserScore::whereMonth('created_at', Carbon::now()->month)->count();
+    $lastActivity = UserScore::whereMonth('created_at', Carbon::now()->subMonth()->month)->count();
 
     if ($lastActivity == 0) {
       $percentActivity = (float) (($activity) / 1) * 100;
     } else {
       $percentActivity = (float) (($activity - $lastActivity) / $lastActivity) * 100;
     }
+
+    $download = UserCriteria::whereMonth('created_at', Carbon::now()->month)->first();
+    $lastDownload = UserCriteria::whereMonth('created_at', Carbon::now()->subMonth()->month)->first();
+
+    if ($lastDownload) {
+      if ($lastDownload->count == 0) {
+        $percentDownload = (float) (($download->count) / 1) * 100;
+      } else {
+        $percentDownload = (float) (($download->count - $lastDownload->count) / $lastDownload->count) * 100;
+      }
+    } else {
+      $percentDownload = (float) ($download->count / 1) * 100;
+    }
+
 
     $response = [
       "user_current" => $user,
@@ -102,7 +115,9 @@ class UserRepository implements RepositoryInterface
       "user_count" => $userCount,
       "user_month" => $userMonth,
       "user_activity" => $activity,
-      "activity_percent" => $percentActivity
+      "activity_percent" => $percentActivity,
+      "download" => $download->count,
+      "percent_download" => $percentDownload,
     ];
 
     return $response;

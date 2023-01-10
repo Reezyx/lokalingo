@@ -51,5 +51,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('lang/question/{level_id}', [LanguageController::class, 'getQuestion']);
     Route::get('lang/question/example/{level_id}', [LanguageController::class, 'exampleQuestion']);
     Route::post('lang/answer/{level_id}', [LanguageController::class, 'answerQuestion']);
+    Route::post('lang/answer/example/{level_id}', [LanguageController::class, 'answerQuestionExample']);
     Route::get('leaderboard', [LanguageController::class, 'leaderboard']);
 });

@@ -20,9 +20,8 @@ use PHPUnit\TextUI\XmlConfiguration\Group;
 
 Auth::routes();
 
-Route::get('/', function () {
-  return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/download-apps', [HomeController::class, 'downloadApps'])->name('download.apps');
 
 Route::get('/admin/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/admin/login-store', [AuthController::class, 'adminLogin'])->name('login.store');
@@ -33,8 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'adminLogout'])->name('logout');
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard.index');
     Route::get('profile', [HomeController::class, 'profile']);
-    Route::get('language', [AdminController::class, 'getLanguage'])->name('language.all');
-    Route::get('question', [AdminController::class, 'getQuestion'])->name('question.all');
+    Route::get('language', [AdminController::class, 'getLanguage'])->name('dashboard.language');
     Route::get('user', [AdminController::class, 'getUser'])->name('user.all');
     Route::get('user-datatable', [AdminController::class, 'getDatatableUser'])->name('user.datatable');
   });

@@ -20,6 +20,10 @@
                 style="font-family:Arial, Helvetica, sans-serif; font-size: 24px; font-weight: bold;">
                 Mohon maaf untuk
                 saat ini aplikasi lokalingo belum tersedia di versi website.</p>
+            <div class="d-flex">
+                <a href="{{ route('download.apps') }}" class="btn btn-success mx-auto">Klik untuk mendownload
+                    aplikasi</a>
+            </div>
         </div>
     </div>
 </body>

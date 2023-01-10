@@ -60,32 +60,65 @@ class LanguageController extends Controller
 
     public function answerQuestion(Request $request, $level_id)
     {
-        $data = [];
-        $user = auth('api')->user();
-        $langRepo = new LanguageRepository();
-        $answer = $langRepo->checkAnswer($request, $level_id);
+        try {
+            $data = [];
+            $user = auth('api')->user();
+            $langRepo = new LanguageRepository();
+            $answer = $langRepo->checkAnswer($request, $level_id);
 
-        $checkScore = UserScore::where('user_id', $user->id)->where('level_id', $level_id)->first();
-        if (empty($checkScore)) {
-            $score = new UserScore();
-            $score->user_id = $user->id;
-            $score->level_id = $level_id;
-            $score->score = $answer['score'];
-            $score->save();
+            $checkScore = UserScore::where('user_id', $user->id)->where('level_id', $level_id)->first();
+            if (empty($checkScore)) {
+                $score = new UserScore();
+                $score->user_id = $user->id;
+                $score->level_id = $level_id;
+                $score->score = $answer['score'];
+                $score->save();
 
-            $userAuth = User::find($user->id);
-            $userAuth->exp = $userAuth->exp + $answer['score'];
-            $userAuth->save();
+                $userAuth = User::find($user->id);
+                $userAuth->exp = $userAuth->exp + $answer['score'];
+                $userAuth->save();
+            }
+
+            $data['score'] = $answer['score'];
+            $data['upper_middle'] = $answer['score'] > 50 ? true : false;
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Check answer success',
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            Log::debug($e);
+            return response()->json([
+                'code' => 500,
+                'info' => 'Answer Question Failed',
+                'error' => $e->getMessage(),
+            ]);
         }
+    }
 
-        $data['score'] = $answer['score'];
-        $data['upper_middle'] = $answer['score'] > 50 ? true : false;
+    public function answerQuestionExample(Request $request, $level_id)
+    {
+        try {
+            $data = [];
+            $langRepo = new LanguageRepository();
+            $answer = $langRepo->checkAnswerExample($request, $level_id);
 
-        return response()->json([
-            'code' => 200,
-            'info' => 'Check answer success',
-            'data' => $data
-        ]);
+            $data['score'] = $answer['score'];
+
+            return response()->json([
+                'code' => 200,
+                'info' => 'Check answer success',
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            Log::debug($e);
+            return response()->json([
+                'code' => 500,
+                'info' => 'Answer Question Failed',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function leaderboard()
@@ -101,7 +134,11 @@ class LanguageController extends Controller
                 'data' => $dashboard
             ]);
         } catch (\Exception $e) {
-            Log::debug($e);
+            return response()->json([
+                'code' => 500,
+                'info' => 'Get Dashboard Failed',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }
