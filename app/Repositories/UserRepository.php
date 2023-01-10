@@ -53,9 +53,9 @@ class UserRepository implements RepositoryInterface
     $lastUser = User::whereMonth('created_at', Carbon::now()->subMonth()->month())->count();
 
     if ($lastUser == 0) {
-      $percentage = (int) (($user) / 1) * 100;
+      $percentage = (float) (($user) / 1) * 100;
     } else {
-      $percentage = (int) (($user - $lastUser) / $lastUser) * 100;
+      $percentage = (float) (($user - $lastUser) / $lastUser) * 100;
     }
 
     $monthStart = Carbon::now()->startOfMonth();
@@ -65,9 +65,9 @@ class UserRepository implements RepositoryInterface
     $lastTraffic = Traffic::whereMonth('created_at', Carbon::now()->subMonth()->month())->count();
 
     if ($lastTraffic == 0) {
-      $percentTraffic = (int) (($traffic) / 1) * 100;
+      $percentTraffic = (float) (($traffic) / 1) * 100;
     } else {
-      $percentTraffic = (int) (($traffic - $lastTraffic) / $lastTraffic) * 100;
+      $percentTraffic = (float) (($traffic - $lastTraffic) / $lastTraffic) * 100;
     }
 
     $newUsers = User::select(DB::raw("(COUNT(*)) as count"), DB::raw("(DATE_FORMAT(created_at, '%M-%Y')) as month"))->orderBy('created_at', 'asc')->groupBy('month')->limit(6)->get()->toArray();
@@ -86,9 +86,9 @@ class UserRepository implements RepositoryInterface
     $lastActivity = UserScore::whereMonth('created_at', Carbon::now()->subMonth()->month)->count();
 
     if ($lastActivity == 0) {
-      $percentActivity = (int) (($activity) / 1) * 100;
+      $percentActivity = (float) (($activity) / 1) * 100;
     } else {
-      $percentActivity = (int) (($activity - $lastActivity) / $lastActivity) * 100;
+      $percentActivity = (float) (($activity - $lastActivity) / $lastActivity) * 100;
     }
 
     $download = UserCriteria::whereMonth('created_at', Carbon::now()->month)->first();
@@ -96,28 +96,28 @@ class UserRepository implements RepositoryInterface
 
     if ($lastDownload) {
       if ($lastDownload->count == 0) {
-        $percentDownload = (int) (($download->count) / 1) * 100;
+        $percentDownload = (float) (($download->count) / 1) * 100;
       } else {
-        $percentDownload = (int) (($download->count - $lastDownload->count) / $lastDownload->count) * 100;
+        $percentDownload = (float) (($download->count - $lastDownload->count) / $lastDownload->count) * 100;
       }
     } else {
-      $percentDownload = (int) ($download->count / 1) * 100;
+      $percentDownload = (float) ($download->count / 1) * 100;
     }
 
 
     $response = [
       "user_current" => $user,
       "user_past" => $lastUser,
-      "percentage" => $percentage,
+      "percentage" => ceil($percentage),
       "traffic_current" => $traffic,
       "traffic_past" => $lastTraffic,
-      "percent_traffic" => $percentTraffic,
+      "percent_traffic" => ceil($percentTraffic),
       "user_count" => $userCount,
       "user_month" => $userMonth,
       "user_activity" => $activity,
-      "activity_percent" => $percentActivity,
+      "activity_percent" => ceil($percentActivity),
       "download" => $download->count,
-      "percent_download" => $percentDownload,
+      "percent_download" => ceil($percentDownload),
     ];
 
     return $response;
