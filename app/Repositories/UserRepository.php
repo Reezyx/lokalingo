@@ -100,7 +100,7 @@ class UserRepository implements RepositoryInterface
       } else {
         $percentDownload = (float) (($download->count - $lastDownload->count) / $lastDownload->count) * 100;
       }
-    }  else if($download && !$lastDownload){
+    } else if ($download && !$lastDownload) {
       $percentDownload = (float) ($download->count / 1) * 100;
     } else if (!$download && $lastDownload) {
       $percentDownload = (float) (0 / 1) * 100;
@@ -120,7 +120,7 @@ class UserRepository implements RepositoryInterface
       "user_month" => $userMonth,
       "user_activity" => $activity,
       "activity_percent" => ceil($percentActivity),
-      "download" => $download->count,
+      "download" => $download->count ? $download->count : 0,
       "percent_download" => ceil($percentDownload),
     ];
 
