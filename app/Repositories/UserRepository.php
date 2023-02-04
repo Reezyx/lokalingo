@@ -94,12 +94,16 @@ class UserRepository implements RepositoryInterface
     $download = UserCriteria::whereMonth('created_at', Carbon::now()->month)->first();
     $lastDownload = UserCriteria::whereMonth('created_at', Carbon::now()->subMonth()->month)->first();
 
-    if ($lastDownload) {
+    if ($lastDownload && $download) {
       if ($lastDownload->count == 0) {
         $percentDownload = (float) (($download->count) / 1) * 100;
       } else {
         $percentDownload = (float) (($download->count - $lastDownload->count) / $lastDownload->count) * 100;
       }
+    }  else if($download && !$lastDownload){
+      $percentDownload = (float) ($download->count / 1) * 100;
+    } else if (!$download && $lastDownload) {
+      $percentDownload = (float) (0 / 1) * 100;
     } else {
       $percentDownload = (float) ($download->count / 1) * 100;
     }
